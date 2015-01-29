@@ -155,10 +155,14 @@ We recommend using a PostgreSQL database. For MySQL check [MySQL setup guide](da
 
     # Enable Redis socket for default Debian / Ubuntu path
     echo 'unixsocket /var/run/redis/redis.sock' | sudo tee -a /etc/redis/redis.conf
+
+If you are using redis-server 2.4.0 and up you should grant permission to the socket to all members of the redis group (versions below 2.4.0 do not support this).
+
     # Grant permission to the socket to all members of the redis group
     echo 'unixsocketperm 770' | sudo tee -a /etc/redis/redis.conf
 
-    # Create the directory which contains the socket
+Create the directory which contains the socket
+
     mkdir /var/run/redis
     chown redis:redis /var/run/redis
     chmod 755 /var/run/redis
@@ -166,6 +170,8 @@ We recommend using a PostgreSQL database. For MySQL check [MySQL setup guide](da
     if [ -d /etc/tmpfiles.d ]; then
       echo 'd  /var/run/redis  0755  redis  redis  10d  -' | sudo tee -a /etc/tmpfiles.d/redis.conf
     fi
+    
+Apply the changes by restarting redis server
 
     # Activate the changes to redis.conf
     sudo service redis-server restart
